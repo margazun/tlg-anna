@@ -1,5 +1,16 @@
-import { getConfig } from "./config/config";
+import { bot, botStart } from './bot/bot';
+import { DB } from './db/commands';
 
-console.log('Hi! It\'s me!\nAre you here?\nDo you hear?');
-const config = getConfig('env_');
-console.log(config.bot);
+const main = async () => {
+	try {
+		botStart();
+		process.once('SIGINT', () => bot.stop('SIGINT'));
+		process.once('SIGTERM', () => bot.stop('SIGTERM'));
+	} catch (err) {
+		console.error(err);
+		throw new Error("'Database has not been connected.'");
+	}
+
+}
+
+main().catch(err => console.error(err));
