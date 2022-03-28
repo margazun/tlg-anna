@@ -21,3 +21,9 @@ export interface LessonResultI {
 	introLessons: number,
 	demoLessons: number,
 }
+
+export interface ReportDayI {
+	date: Date,
+	lessons: LessonResultI,
+	payments: PaymentResultI,
+}

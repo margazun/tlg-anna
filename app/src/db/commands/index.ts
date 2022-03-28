@@ -1,10 +1,10 @@
 import { formatDate, getNextDay, getPrevtDay } from '../../helpers';
-import { LessonDayResultI, LessonResultI, Payment, PaymentDayResultI, PaymentI, PaymentResultI } from '../../types';
+import { LessonDayResultI, LessonResultI, Payment, PaymentDayResultI, PaymentI, PaymentResultI, ReportDayI } from '../../types';
 import { sql } from '../sql.db';
 
 
 export namespace DB {
-	export async function selectByDate(date: Date | string) {
+	export async function selectByDate(date: Date | string): Promise<ReportDayI> {
 
 		date = new Date(date);
 		const nextDay = new Date(date);
@@ -33,7 +33,7 @@ export namespace DB {
 				const result = await sql<Payment>(sqlString);
 				let totalAmount: number = 0;
 				result.map(element => {
-					totalAmount += (element.is_gift === 'false' ? 1 : -1) * Number.parseFloat(element.amount);
+					totalAmount += Number.parseFloat(element.amount);
 				})
 			return {
 				date,
@@ -87,11 +87,6 @@ export namespace DB {
 				introLessons,
 				demoLessons
 			}
-		}
-		export async function getTypes(): Promise<any> {
-			const sqlString = `SELECT id, _name, _description FROM public.events_dict;`;
-			const result = sql<any>(sqlString);
-			return result;
 		}
 		export async function yesterday(): Promise<LessonDayResultI> {
 			const date = new Date();
